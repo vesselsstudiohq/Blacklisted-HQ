@@ -12,7 +12,7 @@ const link = "text-bone/80 underline-offset-4 transition-colors hover:text-bone 
     <nav aria-label="Visit">
       <p class="mb-4 font-mono text-[0.65rem] tracking-[0.25em] text-bone/45">VISIT</p>
       <ul class="space-y-2 text-sm">
-        <li><a class={link} href={site.maps} target="_blank" rel="noopener">Google Maps</a></li>
+        <li><a class={link} href={site.maps} data-maps-desktop={site.mapsDesktop} target="_blank" rel="noopener">Google Maps</a></li>
         <li class="text-bone/60">{site.city}, {site.region}</li>
       </ul>
     </nav>

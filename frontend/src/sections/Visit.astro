@@ -24,7 +24,7 @@ import { site } from "../data/site";
       <p class="mt-1 text-center font-mono text-[0.65rem] tracking-[0.25em] text-bone/60">BY {site.parent}®</p>
       <div class="mt-7 border-t border-bone/15 pt-5 text-center">
         <p class="text-sm text-bone/80">{site.city}, {site.region}</p>
-        <a href={site.maps} target="_blank" rel="noopener" class="mt-2 inline-block font-mono text-[0.7rem] tracking-[0.2em] text-honey underline-offset-4 hover:underline">OPEN IN GOOGLE MAPS ↗</a>
+        <a href={site.maps} data-maps-desktop={site.mapsDesktop} target="_blank" rel="noopener" class="mt-2 inline-block font-mono text-[0.7rem] tracking-[0.2em] text-honey underline-offset-4 hover:underline">OPEN IN GOOGLE MAPS ↗</a>
       </div>
     </article>
   </div>

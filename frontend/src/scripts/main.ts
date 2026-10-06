@@ -29,6 +29,11 @@ const loaderEls = {
   navImg: $<HTMLElement>("#nav-logo-img"),
 };
 
+// Desktop (mouse + keyboard) gets the full Google Maps address; phones keep Sid's short link.
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  $$<HTMLAnchorElement>("a[data-maps-desktop]").forEach((a) => (a.href = a.dataset.mapsDesktop!));
+}
+
 const progress = createProgress(loaderEls);
 initTouchCursor();
 const idle = (fn: () => void) => {
