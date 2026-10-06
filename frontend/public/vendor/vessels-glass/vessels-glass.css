@@ -1,0 +1,164 @@
+/* Vessels Glass — the 4-layer glass GUI kit (SIDSTACK).
+   The four layers, back to front, inside every [data-vg] element:
+     4 base   edge distortion — rim-only refraction + chromatic aberration   } .vg-under: ONE chained
+              (the colour split is painted on .vg-l1::after unless fringe:"filter")
+     3 frost  backdrop blur + saturation (+ grain in .vg-grain)             }   backdrop pass, in this
+     2 echo   the liquid-glass refraction, inverted (pinch instead of bulge) }   order (set by the script)
+     1 front  the liquid-glass refraction                                   }
+              + its specular highlight in .vg-l1 (painted, no backdrop pass)
+   then the component's own content. The container itself carries no filter, opacity, mask or
+   z-index, so every layer's backdrop-filter still reads the page behind it. */
+
+:root {
+  --vg-ink: #f3eef5;
+  --vg-tint: 157 0 255;          /* #9D00FF, as r g b for alpha mixes */
+  --vg-highlight: 213 0 249;     /* #D500F9 */
+  --vg-shadow: 28 19 28;         /* #1C131C */
+  --vg-solid: #2a1843;           /* reduced-transparency surface */
+  --vg-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+[data-vg] {
+  --vg-i: 0.7;                                    /* intensity 0..1, set by vessels-glass.js */
+  --vg-pad: 0.7rem 1.1rem;
+  --vg-radius: 18px;
+  --vg-font: 0.95rem;
+  position: relative;
+  border-radius: var(--vg-radius);
+  padding: var(--vg-pad);
+  font-size: var(--vg-font);
+  color: var(--vg-ink);
+  background: transparent;
+  box-shadow: 0 14px 34px -14px rgb(var(--vg-shadow) / 0.75), 0 2px 6px -2px rgb(var(--vg-shadow) / 0.4);
+}
+[data-vg][data-vg-size="sm"] { --vg-pad: 0.45rem 0.8rem; --vg-radius: 12px; --vg-font: 0.82rem; }
+[data-vg][data-vg-size="lg"] { --vg-pad: 1.2rem 1.6rem; --vg-radius: 26px; --vg-font: 1.08rem; }
+
+/* content always paints above the stack (tree order; no z-index on the container) */
+[data-vg] > :not(.vg-stack) { position: relative; }
+
+.vg-stack, .vg-stack > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.vg-stack { overflow: hidden; }
+
+/* 4 → 3 → 2 → 1 · one chained backdrop pass set by vessels-glass.js:
+   url(#vg-edge-N) blur() saturate() url(#vg-echo-N) url(#vg-front-N) */
+.vg-under {
+  background: linear-gradient(160deg, rgb(var(--vg-tint) / calc(0.10 + 0.08 * var(--vg-i))), rgb(var(--vg-shadow) / 0.18));
+}
+
+/* 3 · the frost's grain: painted over the pass, no backdrop sampling of its own */
+.vg-grain {
+  background-image: var(--vg-grain-url);
+  background-size: 160px 160px;
+  opacity: calc(0.05 + 0.08 * var(--vg-i));
+  mix-blend-mode: overlay;
+}
+
+/* 1 · front — the specular highlight over the refraction (painted, no backdrop pass) */
+.vg-l1 {
+  background:
+    radial-gradient(140px circle at var(--vg-mx, 28%) var(--vg-my, 0%), rgb(255 255 255 / calc(0.10 + 0.20 * var(--vg-i))), transparent 62%),
+    linear-gradient(135deg, rgb(255 255 255 / 0.16) 0%, rgb(255 255 255 / 0.03) 40%, transparent 62%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.55),
+    inset 0 -1px 0 rgb(255 255 255 / 0.10),
+    inset 0 0 0 1px rgb(255 255 255 / 0.13),
+    inset 0 0 22px -8px rgb(var(--vg-highlight) / 0.35);
+}
+
+/* the chromatic edge, painted (default): a warm fringe on one side, a cool one on the other —
+   layer 4's colour split without its GPU cost. fringe:"filter" computes it in the edge stage instead. */
+[data-vg-fringe="css"] .vg-l1::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset calc(1px + 1.5px * var(--vg-i)) 0 calc(2px * var(--vg-i)) -1px rgb(255 60 120 / calc(0.18 + 0.3 * var(--vg-i))),
+    inset calc(-1px - 1.5px * var(--vg-i)) 0 calc(2px * var(--vg-i)) -1px rgb(60 200 255 / calc(0.16 + 0.28 * var(--vg-i))),
+    inset 0 calc(1px + 1px * var(--vg-i)) calc(2px * var(--vg-i)) -1px rgb(255 220 120 / calc(0.10 + 0.2 * var(--vg-i)));
+}
+
+/* solid (prefers-reduced-transparency): a real surface, no backdrop sampling at all */
+[data-vg-quality="solid"] .vg-under { background: var(--vg-solid); }
+[data-vg-quality="solid"] .vg-grain { display: none; }
+
+/* ── components ─────────────────────────────────────────────────────────────── */
+
+/* button */
+[data-vg="button"] {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  font-size: var(--vg-font);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(.3, 0, .66, -.3), box-shadow 180ms ease;
+}
+[data-vg="button"]:hover { transform: translateY(-1px); }
+[data-vg="button"]:active { transform: translateY(1px) scale(0.98); }
+
+/* card */
+[data-vg="card"] { --vg-pad: 1.3rem 1.4rem; display: block; max-width: 22rem; }
+
+/* nav bar */
+[data-vg="nav"] { --vg-radius: 999px; --vg-pad: 0.4rem 0.55rem; display: flex; gap: 0.25rem; align-items: center; width: fit-content; }
+[data-vg="nav"] a { color: var(--vg-ink); text-decoration: none; padding: 0.45rem 0.9rem; border-radius: 999px; font-weight: 500; }
+[data-vg="nav"] a[aria-current="page"], [data-vg="nav"] a:hover { background: rgb(255 255 255 / 0.12); }
+
+/* modal (native <dialog>) */
+dialog[data-vg="modal"] { --vg-pad: 1.6rem 1.7rem; --vg-radius: 28px; border: 0; max-width: min(28rem, calc(100vw - 2rem)); }
+dialog[data-vg="modal"]::backdrop { background: rgb(var(--vg-shadow) / 0.45); }
+
+/* toggle (role=switch); the thumb is a lite glass knob */
+[data-vg="toggle"] {
+  appearance: none; border: 0; cursor: pointer; font: inherit;
+  --vg-pad: 0; --vg-radius: 999px;
+  width: calc(3.2rem * var(--vg-scale, 1)); height: calc(1.8rem * var(--vg-scale, 1));
+}
+[data-vg="toggle"][data-vg-size="sm"] { --vg-scale: 0.8; }
+[data-vg="toggle"][data-vg-size="lg"] { --vg-scale: 1.25; }
+[data-vg="toggle"] .vg-thumb {
+  position: absolute; top: 12%; left: 6%;
+  width: 38%; height: 76%; border-radius: 999px;
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.7));
+  box-shadow: 0 2px 8px rgb(var(--vg-shadow) / 0.45), inset 0 -2px 3px rgb(var(--vg-tint) / 0.25);
+  transition: left 250ms cubic-bezier(.3, 0, .66, -.3), background 200ms ease;
+}
+[data-vg="toggle"][aria-checked="true"] .vg-thumb { left: 56%; background: linear-gradient(160deg, #fff, rgb(var(--vg-highlight) / 0.85)); }
+
+/* input (label wrapping an input) */
+[data-vg="input"] { display: flex; align-items: center; gap: 0.6rem; min-width: 16rem; cursor: text; }
+[data-vg="input"] input { all: unset; flex: 1; min-width: 0; color: var(--vg-ink); font-size: var(--vg-font); }
+[data-vg="input"] input::placeholder { color: rgb(243 238 245 / 0.62); }
+[data-vg="input"]:focus-within { outline: 2px solid rgb(var(--vg-highlight)); outline-offset: 3px; }
+
+/* tooltip: kept laid out (visibility, not display) so its refraction map is ready when shown */
+.vg-tip-wrap { position: relative; display: inline-flex; }
+[data-vg="tooltip"] {
+  --vg-pad: 0.4rem 0.7rem; --vg-radius: 10px; --vg-font: 0.8rem;
+  position: absolute; bottom: calc(100% + 10px); left: 50%; translate: -50% 4px;
+  white-space: nowrap; visibility: hidden; opacity: 0;
+  transition: opacity 150ms ease, translate 150ms ease, visibility 0s linear 150ms;
+}
+.vg-tip-wrap:hover [data-vg="tooltip"], .vg-tip-wrap:focus-within [data-vg="tooltip"] {
+  visibility: visible; opacity: 1; translate: -50% 0; transition: opacity 150ms ease, translate 150ms ease;
+}
+/* a hidden glass element still costs its full backdrop pass every frame (measured: one hidden
+   tooltip took a page from 59 to 23 fps on a UHD 620), so the refraction runs only while it shows */
+.vg-tip-wrap:not(:hover):not(:focus-within) [data-vg="tooltip"] .vg-under,
+[data-vg][hidden] .vg-under,
+dialog[data-vg]:not([open]) .vg-under { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+
+:focus-visible { outline: 2px solid rgb(var(--vg-highlight)); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-vg], [data-vg] *, [data-vg="tooltip"] { transition: none !important; }
+  [data-vg="button"]:hover, [data-vg="button"]:active { transform: none; }
+}

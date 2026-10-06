@@ -1,0 +1,26 @@
+---
+import { ASTERISK_PATH, ASTERISK_VIEWBOX, ASTERISK_CENTER } from "../data/asterisk";
+// Five 72° wedges, one per arm (top arm first, clockwise), used to fill the arms in order.
+const { x: cx, y: cy } = ASTERISK_CENTER;
+const wedges = Array.from({ length: 5 }, (_, i) => {
+  const mid = -90 + i * 72;
+  const pt = (deg: number) => {
+    const r = (deg * Math.PI) / 180;
+    return `${(cx + Math.cos(r) * 1500).toFixed(1)},${(cy + Math.sin(r) * 1500).toFixed(1)}`;
+  };
+  return `${cx},${cy} ${pt(mid - 36)} ${pt(mid + 36)}`;
+});
+interface Props { id?: string; class?: string }
+const { id, class: cls } = Astro.props;
+---
+<svg id={id} class={cls} viewBox={ASTERISK_VIEWBOX} role="img" aria-label="BLACKLISTED asterisk">
+  <defs>
+    {wedges.map((w, i) => (
+      <clipPath id={`arm-${i}`}><polygon points={w} /></clipPath>
+    ))}
+  </defs>
+  <path d={ASTERISK_PATH} fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round" class="text-bone/40" />
+  {wedges.map((_, i) => (
+    <path d={ASTERISK_PATH} clip-path={`url(#arm-${i})`} class="ast-arm fill-bone" />
+  ))}
+</svg>

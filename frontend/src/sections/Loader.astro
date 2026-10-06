@@ -1,0 +1,14 @@
+---
+import AsteriskMark from "../components/AsteriskMark.astro";
+---
+<div id="loader" class="fixed inset-0 z-50 grid place-items-center overflow-hidden bg-meadow" aria-live="polite">
+  <!-- The nano-retract surface: painted Night Meadow at hand-off, then eroded to reveal the hero. -->
+  <canvas id="loader-particles" class="pointer-events-none absolute inset-0 size-full" aria-hidden="true"></canvas>
+  <div class="relative flex flex-col items-center gap-8">
+    <AsteriskMark id="loader-asterisk" class="w-[min(38vw,240px)]" />
+    <p class="font-mono text-xs tracking-[0.3em] text-bone/70">
+      <span class="sr-only">Loading </span><span id="loader-percent">000%</span>
+    </p>
+  </div>
+</div>
+<canvas id="asterisk-canvas" class="pointer-events-none fixed top-0 left-0 z-[60] opacity-0" aria-hidden="true"></canvas>

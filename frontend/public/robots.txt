@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blacklisted-trendmaker.vercel.app/sitemap-index.xml

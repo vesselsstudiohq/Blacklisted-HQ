@@ -1,0 +1,39 @@
+---
+import { site } from "../data/site";
+const year = new Date().getFullYear();
+const link = "text-bone/80 underline-offset-4 transition-colors hover:text-bone hover:underline";
+---
+<footer class="relative overflow-hidden border-t border-moss/50 bg-meadow px-4 pt-16 pb-8 md:px-8 md:pt-24">
+  <div class="mx-auto grid max-w-6xl gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <p class="font-mono text-[0.65rem] tracking-[0.3em] text-honey">WEAR DIFFERENT. STAY BLACKLISTED.</p>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-bone/70">Streetwear in {site.city}, by {site.parent}®. Not just for everyone.</p>
+    </div>
+    <nav aria-label="Visit">
+      <p class="mb-4 font-mono text-[0.65rem] tracking-[0.25em] text-bone/45">VISIT</p>
+      <ul class="space-y-2 text-sm">
+        <li><a class={link} href={site.maps} target="_blank" rel="noopener">Google Maps</a></li>
+        <li class="text-bone/60">{site.city}, {site.region}</li>
+      </ul>
+    </nav>
+    <nav aria-label="Follow">
+      <p class="mb-4 font-mono text-[0.65rem] tracking-[0.25em] text-bone/45">FOLLOW</p>
+      <ul class="space-y-2 text-sm">
+        <li><a class={link} href={site.instagramStore} target="_blank" rel="noopener">@blacklisted_store1</a></li>
+        <li><a class={link} href={site.instagramOwner} target="_blank" rel="noopener">@trend______maker</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Legal">
+      <p class="mb-4 font-mono text-[0.65rem] tracking-[0.25em] text-bone/45">LEGAL</p>
+      <ul class="space-y-2 text-sm">
+        <li><a class={link} href="/privacy">Privacy</a></li>
+        <li><a class={link} href="/terms">Terms</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="mt-16 text-center font-display text-[clamp(2rem,10.6vw,14rem)] leading-[0.8] font-black tracking-tight text-bone/90 select-none" aria-hidden="true">BLACKLISTED<span class="text-honey">*</span></p>
+  <div class="mx-auto mt-8 flex max-w-6xl flex-wrap justify-between gap-3 font-mono text-[0.6rem] tracking-[0.2em] text-bone/40">
+    <p>© {year} BLACKLISTED · A {site.parent}® STORE</p>
+    <p>NOT JUST FOR EVERYONE</p>
+  </div>
+</footer>

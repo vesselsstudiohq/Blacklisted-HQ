@@ -1,0 +1,26 @@
+---
+import Base from "../layouts/Base.astro";
+import Loader from "../sections/Loader.astro";
+import Nav from "../sections/Nav.astro";
+import Hero from "../sections/Hero.astro";
+import Blacklist from "../sections/Blacklist.astro";
+import Visit from "../sections/Visit.astro";
+import Footer from "../sections/Footer.astro";
+---
+<Base
+  loading
+  title="BLACKLISTED* · Streetwear store in Nizamabad · Not just for everyone"
+  description="BLACKLISTED is a streetwear store in Nizamabad by Trend Maker: shirts, t-shirts, baggy jeans, accessories and jewellery. Wear different. Stay Blacklisted."
+>
+  <link slot="head" rel="preload" as="image" href="/frames/d/001.webp" media="(min-aspect-ratio: 9/10)" fetchpriority="high" />
+  <link slot="head" rel="preload" as="image" href="/frames/m/001.webp" media="(max-aspect-ratio: 9/10)" fetchpriority="high" />
+  <Loader />
+  <Nav />
+  <main>
+    <Hero />
+    <Blacklist />
+    <Visit />
+  </main>
+  <Footer />
+  <script src="../scripts/main.ts"></script>
+</Base>

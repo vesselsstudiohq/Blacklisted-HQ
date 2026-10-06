@@ -1,0 +1,68 @@
+---
+import "../styles/global.css";
+import { site } from "../data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  loading?: boolean;
+}
+const { title, description, loading = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = new URL("/media/og_image_dark_1200x630.png", Astro.site);
+// LocalBusiness data per BASE-RULES 3.4 (geo from Sid's Google Maps pin; opening hours still pending).
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ClothingStore",
+  name: site.name,
+  alternateName: `${site.name} by ${site.parent}`,
+  brand: { "@type": "Brand", name: site.parent },
+  slogan: site.tagline,
+  description,
+  url: Astro.site?.toString(),
+  image: og.toString(),
+  logo: new URL("/media/icon-192.png", Astro.site).toString(),
+  address: { "@type": "PostalAddress", addressLocality: site.city, addressRegion: site.region, addressCountry: "IN" },
+  geo: { "@type": "GeoCoordinates", latitude: site.geo.lat, longitude: site.geo.lng },
+  hasMap: site.maps,
+  sameAs: [site.instagramStore, site.instagramOwner],
+};
+---
+<!doctype html>
+<html lang="en" class:list={[{ "is-loading": loading }]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0d1411" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/favicon_32x32.png" />
+    <link rel="apple-touch-icon" href="/media/apple_touch_icon_180x180.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="BLACKLISTED" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+    <meta name="geo.region" content="IN-TG" />
+    <meta name="geo.placename" content="Nizamabad" />
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+    <link rel="manifest" href="/site.webmanifest" />
+    <slot name="head" />
+    <link rel="preload" href="/fonts/Orbitron-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Figtree-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/vendor/vessels-glass/vessels-glass.css" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline src="/vendor/vessels-glass/vessels-glass.js" defer></script>
+  </head>
+  <body class="bg-meadow text-bone">
+    <slot />
+  </body>
+</html>

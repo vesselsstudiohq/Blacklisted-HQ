@@ -1,0 +1,16 @@
+---
+import HeroDock from "../components/HeroDock.astro";
+---
+<section id="hero" class="relative h-svh w-full overflow-hidden bg-bone" aria-label="Walk into the store">
+  <picture>
+    <source media="(max-aspect-ratio: 9/10)" srcset="/frames/m/001.webp" />
+    <img src="/frames/d/001.webp" alt="" fetchpriority="high" class="absolute inset-0 size-full object-cover" width="1600" height="900" />
+  </picture>
+  <canvas id="hero-canvas" class="absolute inset-0 size-full" aria-hidden="true"></canvas>
+  <div data-hero-intro class="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-meadow/75 to-transparent"></div>
+  <h1 data-hero-intro class="absolute bottom-[216px] left-4 max-w-[18ch] font-display text-2xl leading-tight font-black tracking-wide text-bone md:bottom-10 md:left-8 md:text-4xl">
+    Wear different. Stay Blacklisted<span class="text-bone/60">*</span>
+  </h1>
+  <div id="lights-out" class="pointer-events-none absolute inset-0 bg-meadow opacity-0"></div>
+  <HeroDock />
+</section>

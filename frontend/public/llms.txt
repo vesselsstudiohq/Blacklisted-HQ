@@ -1,0 +1,11 @@
+# BLACKLISTED
+
+> BLACKLISTED is a streetwear clothing store in Nizamabad, Telangana, India, run by Trend Maker (Instagram: @trend______maker). Tagline: "Not just for everyone." Store Instagram: @blacklisted_store1.
+
+## What it sells
+- Shirts, t-shirts, baggy jeans, accessories and jewellery.
+
+## Pages
+- [Home](https://blacklisted-trendmaker.vercel.app/): a walk into the store, the product categories, and how to visit.
+- [Privacy](https://blacklisted-trendmaker.vercel.app/privacy)
+- [Terms](https://blacklisted-trendmaker.vercel.app/terms)

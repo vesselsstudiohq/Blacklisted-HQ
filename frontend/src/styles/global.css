@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+/* Self-hosted, OFL fonts (fonts.md, Pairing 2). */
+@font-face {
+  font-family: "Orbitron";
+  src: url("/fonts/Orbitron-latin.woff2") format("woff2");
+  font-weight: 700 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Figtree";
+  src: url("/fonts/Figtree-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-latin.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+/* Palette tokens — .planning/palette.json (approved 2026-10-06). The only colours in the build. */
+@theme {
+  --color-meadow: #0d1411;
+  --color-bone: #ede7df;
+  --color-moss: #3a5148;
+  --color-vermilion: #d9461e;
+  --color-ink: #141b18;
+  --color-honey: #cda56c;
+
+  --font-display: "Orbitron", "Arial Black", sans-serif;
+  --font-sans: "Figtree", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --ease-house: cubic-bezier(0.3, 0, 0.66, -0.3);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Vessels Glass kit tokens mapped to the palette (glass-spec.md). */
+:root {
+  --vg-ink: #ede7df;
+  --vg-tint: 58 81 72;
+  --vg-highlight: 205 165 108;
+  --vg-shadow: 13 20 17;
+  --vg-solid: #1a2420;
+}
+[data-tone="accent"] {
+  --vg-tint: 217 70 30;
+}
+
+@layer base {
+  html {
+    background: var(--color-meadow);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  html.is-loading {
+    overflow: hidden;
+  }
+  /* No visible scrollbar anywhere (Sid): wheel, touch, keys and Lenis still scroll the page.
+     overflow-x: clip keeps any wide 3D/animated element from widening the page on phones
+     (clip, not hidden, so it creates no scroll container and the scroll pin keeps working). */
+  html,
+  body {
+    scrollbar-width: none;
+    overflow-x: clip;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+  }
+  ::selection {
+    background: var(--color-moss);
+    color: var(--color-bone);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-honey);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Names list rows: faded by default, alive on hover/focus (motion-spec: 180ms). */
+  .bl-row {
+    opacity: 0.18;
+    transition: opacity 180ms var(--ease-out-soft), color 180ms var(--ease-out-soft);
+  }
+  .bl-row:hover,
+  .bl-row:focus-visible,
+  .bl-row[aria-pressed="true"] {
+    opacity: 1;
+  }
+  .bl-list:hover .bl-row:not(:hover):not([aria-pressed="true"]) {
+    opacity: 0.1;
+  }
+
+  /* Visit backdrop: the colour tool's aurora structure in Moss + Honey (the accent stays CTA-only),
+     with fine grain, so the glass card has light to refract. */
+  .bl-aurora {
+    background:
+      radial-gradient(80% 70% at 78% 35%, rgb(58 81 72 / 0.9) 0%, transparent 62%),
+      radial-gradient(60% 60% at 18% 92%, rgb(205 165 108 / 0.2) 0%, transparent 60%),
+      var(--color-meadow);
+  }
+  .bl-aurora::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Loader asterisk arm fills: hidden until the arm's progress passes. */
+  .ast-arm {
+    opacity: 0;
+    transition: opacity 250ms var(--ease-out-soft);
+  }
+  .ast-arm.is-on {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bl-row,
+  .ast-arm {
+    transition: none;
+  }
+}
+
+/* Vessels Glass sizing per surface (glass-spec.md). Unlayered and ID-scoped on purpose: the kit
+   sets --vg-pad / --vg-radius on each [data-vg] element in unlayered CSS, which beats Tailwind's
+   layered utilities, so arbitrary-property classes on those elements never apply. */
+#hero-dock [data-vg="card"] {
+  --vg-pad: 1rem;
+  --vg-radius: 26px;
+  width: 168px;
+  height: 168px;
+  max-width: none;
+}
+@media (min-width: 768px) {
+  #hero-dock [data-vg="card"] {
+    --vg-pad: 1.2rem;
+    --vg-radius: 32px;
+    width: 220px;
+    height: 220px;
+  }
+}
+#hero-dock [data-vg="button"] {
+  --vg-pad: 0;
+  --vg-radius: 999px;
+}
+#bl-card [data-vg="card"] {
+  --vg-pad: 0.6rem;
+  --vg-radius: 20px;
+}
+#visit [data-vg="card"] {
+  --vg-pad: 2rem;
+  --vg-radius: 28px;
+}

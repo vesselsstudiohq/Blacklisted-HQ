@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Not on the list · BLACKLISTED" description="This page does not exist on the BLACKLISTED website.">
+  <main class="grid min-h-svh place-items-center px-4 text-center">
+    <div>
+      <p class="font-mono text-xs tracking-[0.3em] text-honey">ERROR 404</p>
+      <h1 class="mt-6 font-display text-[clamp(2.5rem,9vw,6rem)] leading-none font-black tracking-tight text-bone">NOT ON<br />THE LIST<span class="text-bone/50">*</span></h1>
+      <p class="mt-6 text-bone/70">This page doesn't exist. The store does.</p>
+      <a href="/" data-vg="button" data-vg-size="md" class="mt-10 inline-block font-sans text-sm font-semibold tracking-[0.06em] text-bone uppercase">Back to the store</a>
+    </div>
+  </main>
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => window.VesselsGlass && window.VesselsGlass.mount());
+  </script>
+</Base>

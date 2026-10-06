@@ -1,0 +1,58 @@
+---
+import { categories } from "../data/products";
+const slides = categories.flatMap((c) => c.items.map((i) => ({ ...i, cat: c.name })));
+const toggle = "px-5 py-2 font-sans text-xs font-semibold tracking-[0.18em] text-bone uppercase";
+---
+<section id="blacklist" class="relative bg-meadow px-4 pt-10 pb-24 md:pt-14 md:pb-32" aria-labelledby="blacklist-title">
+  <h2 id="blacklist-title" class="sr-only">The Blacklist: our categories</h2>
+
+  <div class="relative z-20 mb-12 flex justify-center gap-2 md:mb-16" role="group" aria-label="View">
+    <button type="button" data-vg="button" data-vg-size="sm" data-bl-view="list" aria-pressed="true" class={toggle}>List</button>
+    <button type="button" data-vg="button" data-vg-size="sm" data-bl-view="loop" aria-pressed="false" class={toggle}>Loop</button>
+  </div>
+
+  <!-- LIST: the words. Each button is only as big as its word; zones across it pick the product. -->
+  <ul id="bl-list" data-reveal class="bl-list flex flex-col items-center gap-3 md:gap-6">
+    {categories.map((c) => (
+      <li data-reveal-item class="flex justify-center">
+        <button
+          type="button"
+          class="bl-row touch-pan-y font-display text-[clamp(2.1rem,8.4vw,8.75rem)] leading-[0.92] font-black tracking-tight text-bone"
+          data-key={c.key}
+          aria-label={`${c.name}: ${c.items.map((i) => i.label.toLowerCase()).join(", ")}`}
+        >
+          {c.name}
+        </button>
+      </li>
+    ))}
+  </ul>
+
+  <!-- LOOP: every product on a rotating 3D ring (CSS 3D, no WebGL). Hidden until chosen. -->
+  <!-- Clipped: the ring is wider than a phone screen and would otherwise widen the whole page. -->
+  <div id="bl-loop" class="relative hidden h-[min(78vh,640px)] overflow-hidden select-none perspective-[1500px]" aria-label="All products">
+    <div id="bl-ring" class="absolute top-1/2 left-1/2 transform-3d">
+      {slides.map((s) => (
+        <div class="bl-slot pointer-events-none absolute top-0 left-0 transform-3d">
+        <figure class="bl-slide absolute -top-[120px] -left-[90px] h-[240px] w-[180px] overflow-hidden rounded-[18px] bg-ink backface-visible max-md:-top-[80px] max-md:-left-[60px] max-md:h-[160px] max-md:w-[120px]">
+          <img src={s.src} alt={s.alt} loading="lazy" decoding="async" class="size-full object-cover" />
+          <figcaption class:list={["absolute inset-x-3 bottom-3 font-display text-[0.62rem] leading-tight font-black tracking-wide", s.tone === "ink" ? "text-ink" : "text-bone"]}>
+            {s.label}
+            <span class="block font-mono text-[0.5rem] font-medium tracking-[0.2em] opacity-70">{s.cat}</span>
+          </figcaption>
+        </figure>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Placement on the wrapper (GSAP moves it); the kit's glass card inside keeps its own position. -->
+  <div id="bl-card" class="pointer-events-none invisible fixed top-0 left-0 z-30 w-[min(56vw,15rem)] opacity-0" aria-live="polite">
+    <div data-vg="card" data-vg-size="md" data-vg-intensity="0.7" data-vg-tier="lite">
+      <canvas id="bl-canvas" width="480" height="640" role="img" aria-label="" class="block aspect-[3/4] w-full rounded-[14px] bg-ink"></canvas>
+      <div class="mt-2 flex items-baseline justify-between gap-2 px-1 font-mono tracking-[0.18em]">
+        <span id="bl-label" class="text-[0.7rem] text-bone"></span>
+        <span id="bl-meta" class="text-[0.6rem] text-bone/55"></span>
+      </div>
+    </div>
+  </div>
+</section>

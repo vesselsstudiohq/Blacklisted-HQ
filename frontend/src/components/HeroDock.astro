@@ -1,0 +1,29 @@
+---
+import { site } from "../data/site";
+import { ASTERISK_PATH, ASTERISK_VIEWBOX } from "../data/asterisk";
+// A rounded-square Vessels Glass tile, pinned by lib/scrub.ts over the bottom-right corner where the
+// video generator's marks were blurred out of the frames (desktop and mobile sets): motto on top,
+// then location + the two Instagram accounts.
+const btn = "grid size-10 place-items-center text-bone md:size-11";
+---
+<div id="hero-dock" class="absolute z-10">
+  <div data-vg="card" data-vg-size="md" data-vg-intensity="0.6" data-vg-tier="lite">
+    <!-- Layout lives on this inner box: the kit's own CSS sets display:block on [data-vg] cards. -->
+    <div class="flex size-full flex-col justify-between">
+      <p class="font-display text-[0.7rem] leading-snug font-bold tracking-[0.12em] text-bone md:text-[0.8rem]">
+        NOT JUST<br />FOR EVERYONE<span class="text-honey">*</span>
+      </p>
+      <div class="flex items-center gap-2">
+        <a href={site.maps} target="_blank" rel="noopener" data-vg="button" data-vg-size="sm" data-vg-tier="lite" class={btn} aria-label="Store location on Google Maps" title="Store location">
+          <svg viewBox="0 0 24 24" class="size-4 fill-current" aria-hidden="true"><path d="M12 2.2a7 7 0 0 0-7 7c0 5.2 7 12.6 7 12.6s7-7.4 7-12.6a7 7 0 0 0-7-7Zm0 9.6a2.6 2.6 0 1 1 0-5.2 2.6 2.6 0 0 1 0 5.2Z" /></svg>
+        </a>
+        <a href={site.instagramStore} target="_blank" rel="noopener" data-vg="button" data-vg-size="sm" data-vg-tier="lite" class={btn} aria-label="BLACKLISTED on Instagram" title="@blacklisted_store1">
+          <svg viewBox={ASTERISK_VIEWBOX} class="size-[15px] fill-current" aria-hidden="true"><path d={ASTERISK_PATH} /></svg>
+        </a>
+        <a href={site.instagramOwner} target="_blank" rel="noopener" data-vg="button" data-vg-size="sm" data-vg-tier="lite" class={btn} aria-label="Trend Maker on Instagram" title="@trend______maker">
+          <span class="font-display text-[0.62rem] font-black tracking-tight" aria-hidden="true">TM</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
