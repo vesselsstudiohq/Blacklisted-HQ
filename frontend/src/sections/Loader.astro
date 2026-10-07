@@ -1,12 +1,18 @@
 ---
 import AsteriskMark from "../components/AsteriskMark.astro";
+import VesselsCredit from "../components/VesselsCredit.astro";
+import { site } from "../data/site";
 ---
-<div id="loader" class="fixed inset-0 z-50 grid place-items-center overflow-hidden bg-meadow" aria-live="polite">
+<div id="loader" class="fixed inset-0 z-50 grid place-items-center overflow-hidden bg-meadow">
   <!-- The nano-retract surface: painted Night Meadow at hand-off, then eroded to reveal the hero. -->
   <canvas id="loader-particles" class="pointer-events-none absolute inset-0 size-full" aria-hidden="true"></canvas>
+  <!-- Upper part of the screen, outside the live percentage; .loader-credit in global.css keeps 32px clear above the asterisk. -->
+  {site.credit && (
+    <VesselsCredit compact class="loader-credit absolute left-1/2 w-max -translate-x-1/2" />
+  )}
   <div class="relative flex flex-col items-center gap-8">
     <AsteriskMark id="loader-asterisk" class="w-[min(38vw,240px)]" />
-    <p class="font-mono text-xs tracking-[0.3em] text-bone/70">
+    <p class="font-mono text-xs tracking-[0.3em] text-bone/70" aria-live="polite">
       <span class="sr-only">Loading </span><span id="loader-percent">000%</span>
     </p>
   </div>

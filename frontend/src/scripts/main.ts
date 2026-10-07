@@ -23,6 +23,7 @@ const loaderEls = {
   svg: $<SVGSVGElement>("#loader-asterisk"),
   arms: $$("#loader-asterisk .ast-arm"),
   percent: $<HTMLElement>("#loader-percent"),
+  credit: document.querySelector<HTMLElement>(".loader-credit"),
   canvas: $<HTMLCanvasElement>("#asterisk-canvas"),
   particles: $<HTMLCanvasElement>("#loader-particles"),
   navSlot: $<HTMLElement>("#nav-logo"),

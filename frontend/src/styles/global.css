@@ -123,10 +123,31 @@
   }
 }
 
+/* Loader credit: 16 % from the top, but never closer than 32px above the asterisk. The asterisk group
+   is centred and its half-height is 0.467 × its width (min(38vw, 240px)) + 24px; 30px is the credit's
+   own height. Too short for both (landscape phones): the credit stays out of the way. */
+.loader-credit {
+  top: min(16%, calc(50% - min(17.75vw, 112px) - 86px));
+  animation: loader-credit-in 0.6s ease-out both;
+}
+@keyframes loader-credit-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (max-height: 400px) {
+  .loader-credit {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bl-row,
   .ast-arm {
     transition: none;
+  }
+  .loader-credit {
+    animation: none;
   }
 }
 

@@ -7,6 +7,7 @@ interface LoaderEls {
   svg: SVGSVGElement;
   arms: Element[];
   percent: HTMLElement;
+  credit: HTMLElement | null;
   canvas: HTMLCanvasElement;
   particles: HTMLCanvasElement;
   navSlot: HTMLElement;
@@ -100,7 +101,7 @@ export async function finishLoader(els: LoaderEls) {
   const intro = gsap.timeline({ onUpdate: paint });
   intro
     .to(els.svg, { opacity: 0, duration: 0.6, ease: "power1.inOut" })
-    .to(els.percent, { opacity: 0, duration: 0.4 }, 0)
+    .to(els.credit ? [els.percent, els.credit] : els.percent, { opacity: 0, duration: 0.4 }, 0)
     .to(els.canvas, { opacity: 1, duration: 0.6, ease: "power1.inOut" }, 0) // in place: no zoom (Sid)
     .to(state, { turn: 1, duration: 2.6, ease: "sine.inOut" }, 0.5);
   await intro;
