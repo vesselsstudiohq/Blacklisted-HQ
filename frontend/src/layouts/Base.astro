@@ -10,10 +10,18 @@ interface Props {
 const { title, description, loading = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const og = new URL("/media/og_image_dark_1200x630.png", Astro.site);
-// LocalBusiness data per BASE-RULES 3.4 (geo from Sid's Google Maps pin; opening hours still pending).
-const jsonLd = {
-  "@context": "https://schema.org",
+// LocalBusiness data per BASE-RULES 3.4, matching the Google Business Profile (geo from Sid's pin).
+// Phone, street, postcode and hours appear only once they are filled in data/site.ts.
+const biz = site.business;
+const vesselsHQ = {
+  "@type": "Organization",
+  name: "Vessels HQ",
+  url: "https://www.instagram.com/vesselshq/",
+  sameAs: ["https://www.instagram.com/vesselshq/"],
+};
+const store = {
   "@type": "ClothingStore",
+  "@id": new URL("/#store", Astro.site).toString(),
   name: site.name,
   alternateName: `${site.name} by ${site.parent}`,
   brand: { "@type": "Brand", name: site.parent },
@@ -22,11 +30,31 @@ const jsonLd = {
   url: Astro.site?.toString(),
   image: og.toString(),
   logo: new URL("/media/icon-192.png", Astro.site).toString(),
-  address: { "@type": "PostalAddress", addressLocality: site.city, addressRegion: site.region, addressCountry: "IN" },
+  address: {
+    "@type": "PostalAddress",
+    ...(biz.streetAddress && { streetAddress: biz.streetAddress }),
+    addressLocality: site.city,
+    addressRegion: site.region,
+    ...(biz.postalCode && { postalCode: biz.postalCode }),
+    addressCountry: "IN",
+  },
+  ...(biz.telephone && { telephone: biz.telephone }),
+  ...(biz.hours.length && {
+    openingHoursSpecification: biz.hours.map((h) => ({ "@type": "OpeningHoursSpecification", dayOfWeek: h.days, opens: h.opens, closes: h.closes })),
+  }),
   geo: { "@type": "GeoCoordinates", latitude: site.geo.lat, longitude: site.geo.lng },
   hasMap: site.maps,
   sameAs: [site.instagramStore, site.instagramOwner],
 };
+const website = {
+  "@type": "WebSite",
+  "@id": new URL("/#website", Astro.site).toString(),
+  name: site.name,
+  url: Astro.site?.toString(),
+  about: { "@id": store["@id"] },
+  ...(site.credit && { creator: vesselsHQ }),
+};
+const jsonLd = { "@context": "https://schema.org", "@graph": [store, website] };
 ---
 <!doctype html>
 <html lang="en" class:list={[{ "is-loading": loading }]}>
@@ -35,7 +63,9 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="author" content="Vessels HQ" />
+    {site.credit && <meta name="author" content="Vessels HQ" />}
+    {!site.indexable && <meta name="robots" content="noindex" />}
+    {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#0d1411" />
     <link rel="icon" href="/favicon.ico" sizes="any" />

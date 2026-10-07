@@ -16,6 +16,19 @@ export const site = {
   directions: "https://www.google.com/maps/dir/?api=1&destination=18.669083%2C78.1064653",
   geo: { lat: 18.669083, lng: 78.1064653 },
   heroFrames: 240,
+  // Shop details for Google (JSON-LD), matching the Google Business Profile. Empty until Sid has them
+  // from the owner; nothing here is guessed, and empty fields are left out of the page.
+  business: {
+    telephone: "", // "+91 …"
+    streetAddress: "",
+    postalCode: "",
+    // e.g. { days: ["Monday", "Tuesday"], opens: "10:00", closes: "21:00" }
+    hours: [] as { days: string[]; opens: string; closes: string }[],
+  },
+  // Google Search Console HTML-tag token (only the content="…" value). Empty: no tag rendered.
+  googleVerification: "",
+  // false adds <meta name="robots" content="noindex"> (a declined demo never shows in search).
+  indexable: true,
   // The Vessels HQ "designed & built by" signature in the footer. false removes it (paying clients).
   credit: true,
 };
