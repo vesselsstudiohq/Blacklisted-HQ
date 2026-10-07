@@ -1,5 +1,6 @@
 ---
 import { site } from "../data/site";
+import VesselsCredit from "../components/VesselsCredit.astro";
 const year = new Date().getFullYear();
 const link = "text-bone/80 underline-offset-4 transition-colors hover:text-bone hover:underline";
 ---
@@ -32,6 +33,11 @@ const link = "text-bone/80 underline-offset-4 transition-colors hover:text-bone 
     </nav>
   </div>
   <p class="mt-16 text-center font-display text-[clamp(2rem,10.6vw,14rem)] leading-[0.8] font-black tracking-tight text-bone/90 select-none" aria-hidden="true">BLACKLISTED<span class="text-honey">*</span></p>
+  {site.credit && (
+    <div class="mx-auto mt-10 flex max-w-6xl justify-center border-t border-moss/50 pt-6 md:mt-12 md:pt-8">
+      <VesselsCredit />
+    </div>
+  )}
   <div class="mx-auto mt-8 flex max-w-6xl flex-wrap justify-between gap-3 font-mono text-[0.6rem] tracking-[0.2em] text-bone/40">
     <p>© {year} BLACKLISTED · A {site.parent}® STORE</p>
     <p>NOT JUST FOR EVERYONE</p>

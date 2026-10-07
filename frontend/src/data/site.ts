@@ -16,4 +16,6 @@ export const site = {
   directions: "https://www.google.com/maps/dir/?api=1&destination=18.669083%2C78.1064653",
   geo: { lat: 18.669083, lng: 78.1064653 },
   heroFrames: 240,
+  // The Vessels HQ "designed & built by" signature in the footer. false removes it (paying clients).
+  credit: true,
 };
